@@ -1,0 +1,33 @@
+/* עיצוב כללי של הגוף */
+body {
+    background-color: black; 
+    color: white; 
+    font-family: Arial, sans-serif; /* גופן קריא */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* גובה מלא של הדף */
+    margin: 0;
+  }
+  
+  /* עיצוב כפתורים */
+  button.mat-raised-button {
+    background-color: black !important;
+    color: white !important;
+    border: none; /* ללא גבול */
+    padding: 8px 16px; /* ריווח פנימי של הכפתור */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    width: 180px; /* כפתור תמיד יהיה באורך אחיד */
+    margin: 10px; /* ריווח בין כפתורים */
+    border-radius: 200px; 
+    transition: background-color 0.3s ease; /* אפקט שינוי צבע */
+  }
+  
+  button:hover {
+    background-color: #40E0D0; /* שינוי צבע כפתור כשהעכבר עליהם */
+  }
+  
