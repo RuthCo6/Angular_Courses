@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-course',
+  standalone: true,
   imports: [
     MatButtonModule,
     MatInputModule,

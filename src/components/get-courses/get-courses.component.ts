@@ -16,6 +16,7 @@ import { user } from '../../models/user';
   selector: 'app-get-user',
   imports: [
     MatIconModule,
+    RouterLink,
     MatButtonModule,
     HttpClientModule,
     MatCardModule,

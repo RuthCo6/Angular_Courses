@@ -9,6 +9,7 @@ import { user } from '../../models/user';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     MatInputModule,
     MatButtonModule,

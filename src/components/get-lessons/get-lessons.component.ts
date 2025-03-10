@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
@@ -11,12 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { lesson } from '../../models/lesson';
 import { GetCoursesService } from '../../services/getCourses/get-courses';
-import { Router } from '@angular/router';
+import { Router ,RouterLink} from '@angular/router';
 import { course } from '../../models/course';
 @Component({
   selector:  'app-get-lessons',
   imports: [
     MatIconModule,
+    RouterLink,
     MatButtonModule,
     HttpClientModule,
     MatCardModule,
