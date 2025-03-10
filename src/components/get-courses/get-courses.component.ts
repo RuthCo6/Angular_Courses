@@ -10,13 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { course } from '../../models/course';
 import { GetCoursesService } from '../../services/getCourses/get-courses';
-import { Router,RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { user } from '../../models/user';
 @Component({
   selector: 'app-get-user',
   imports: [
     MatIconModule,
-    RouterLink,
     MatButtonModule,
     HttpClientModule,
     MatCardModule,
