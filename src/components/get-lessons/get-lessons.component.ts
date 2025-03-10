@@ -56,13 +56,13 @@ export class GetLessonsComponent {
  editCourse(lesson: any) {
   const course=this.courseData
   const courseData = JSON.parse(JSON.stringify(course)); 
-  this.router.navigate(['/NewLesson'], { state: { courseData,lesson } });
+  this.router.navigate(['/newLesson'], { state: { courseData,lesson } });
 }
 AddLesson(){
   const course=this.courseData
   const courseData = JSON.parse(JSON.stringify(course)); // המרת ה-Class לאובייקט פשוט
   console.log("📤 נתונים שנשלחים לניווט:", courseData);
-  this.router.navigate(['/NewLesson'], { state: { courseData } });
+  this.router.navigate(['/newLesson'], { state: { courseData } });
 }
   ngOnInit() {
     this.courseService.getAllLessons(this.token,this.courseData.id).subscribe(
