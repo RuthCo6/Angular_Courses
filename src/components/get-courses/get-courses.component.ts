@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { course } from '../../models/course';
-import { GetCoursesService } from '../../services/getCourses/get-courses';
+import { GetCoursesService } from '../../services/getCourses/get-courses.service';
 import { Router } from '@angular/router';
 import { user } from '../../models/user';
 @Component({

@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { GetCoursesService } from '../../services/getCourses/get-courses';
+import { GetCoursesService } from '../../services/getCourses/get-courses.service';
 import { Router } from '@angular/router';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GetCoursesService } from '../../services/getCourses/get-courses';
+import { GetCoursesService } from '../../services/getCourses/get-courses.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';

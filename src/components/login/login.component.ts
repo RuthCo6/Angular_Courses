@@ -21,7 +21,7 @@ import { user } from '../../models/user';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
- registerForm: FormGroup;
+  registerForm: FormGroup;
   show = true;
   constructor(private fb: FormBuilder, private AuthService: AuthService) {
     this.registerForm = this.fb.group({
@@ -38,10 +38,10 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
-   this.AuthService.login(this.registerForm.value.user.email,this.registerForm.value.user.password).subscribe({
+      this.AuthService.login(this.registerForm.value.user.email, this.registerForm.value.user.password).subscribe({
         next: (data) => {
           console.log("נכנסת בהצלחה")
-        localStorage.setItem('role',data.role)   
+          localStorage.setItem('role', data.role)
 
         }, error: (err) => console.log("no")
       });
