@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { user } from '../../models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,9 @@ import { user } from '../../models/user';
 export class LoginComponent {
   registerForm: FormGroup;
   show = true;
-  constructor(private fb: FormBuilder, private AuthService: AuthService) {
+  loginError = ''; // משתנה לשגיאות התחברות
+
+  constructor(private fb: FormBuilder, private AuthService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       user: this.fb.group({
         email: ['', [Validators.required, Validators.email]],
@@ -35,17 +38,26 @@ export class LoginComponent {
   showpasword() {
     this.show = !this.show;
   }
+
   onSubmit(): void {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
-      this.AuthService.login(this.registerForm.value.user.email, this.registerForm.value.user.password).subscribe({
+      const { email, password } = this.registerForm.value.user;
+      
+      // קריאה לשירות ההתחברות
+      this.AuthService.login(email, password).subscribe({
         next: (data) => {
-          console.log("נכנסת בהצלחה")
-          localStorage.setItem('role', data.role)
-
-        }, error: (err) => console.log("no")
+          console.log("נכנסת בהצלחה");
+          localStorage.setItem('role', data.role);
+          sessionStorage.setItem('token', data.token); // שמירת הטוקן
+          this.router.navigate(['/dashboard']); // ניווט לעמוד הבא לאחר התחברות מוצלחת
+        },
+        error: (err) => {
+          console.error("שגיאה בהתחברות", err);
+          this.loginError = 'לא הצלחנו להתחבר. אנא בדוק את פרטי הכניסה שלך.';
+        }
       });
-    };
-    console.log(sessionStorage.getItem("token"));
+    } else {
+      console.log("הטופס לא תקין");
+    }
   }
 }

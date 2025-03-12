@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-
 import { MatIconModule } from '@angular/material/icon';
-//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { course } from '../../models/course';
 import { GetCoursesService } from '../../services/getCourses/get-courses.service';
 import { Router } from '@angular/router';
 import { user } from '../../models/user';
+import { AuthService } from '../../services/auth.service'; // הוספתי את שירות ה־AuthService
+
 @Component({
   selector: 'app-get-user',
   imports: [
@@ -20,82 +19,110 @@ import { user } from '../../models/user';
     HttpClientModule,
     MatCardModule,
     MatListModule,
-    MatDividerModule],
+    MatDividerModule
+  ],
   templateUrl: './get-courses.component.html',
-  styleUrl: './get-courses.component.css'
+  styleUrls: ['./get-courses.component.css']
 })
-export class GetCoursesComponent {
-  courses:course[] = []; // מערך המשתמשים
-    token:string|any=sessionStorage.getItem("token")
-    role:string|any=localStorage.getItem('role')
-  constructor(private courseService:GetCoursesService,private http:HttpClient,private router: Router) {}
-delete(id:number|undefined){
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${this.token}`
-  });
+export class GetCoursesComponent implements OnInit {
+  courses: course[] = []; // מערך הקורסים
+  token: string = ''; // הוספתי את משתנה הטוקן
+  role: string | any = localStorage.getItem('role');
 
-  this.http.delete(`http://localhost:3000/api/courses/${id}`, { headers })
-    .subscribe(
-      (response) => {
-        console.log('Course deleted successfully', response);
-        this.courses = this.courses.filter(course => course.id !== id);
-      },
-      (error) => {
-        console.error('Error deleting course', error); // טיפול בשגיאות
-      }
-    );
- }
- editCourse(course: any) {
-  this.router.navigate(['/NewCourses'], { state: { courseData: course } });
-}
-showLesson(course: any) {
-  this.router.navigate(['/GetLessons'], { state: { courseData: course  } });
-}
-  ngOnInit() {
+  constructor(
+    private courseService: GetCoursesService,
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService // הוספתי את שירות ניהול הטוקן
+  ) {}
+
+  ngOnInit(): void {
+    this.token = this.authService.getToken() ?? ''; // קבלת הטוקן באמצעות השירות
+    this.fetchCourses(); // קריאה לפונקציה להורדת קורסים
+  }
+
+  // פונקציה להורדת קורסים
+  fetchCourses(): void {
     this.courseService.getAllCourses(this.token).subscribe(
       (data) => {
-        this.courses = data; // שמירת המידע במערך
+        this.courses = data; // שמירת הקורסים במערך
       },
       (error) => {
-        console.error('Error fetching users', error); // טיפול בשגיאות
+        console.error('Error fetching courses', error); // טיפול בשגיאות
       }
     );
   }
-  AddPerson(c:course){
+
+  // פונקציה למחיקת קורס
+  delete(id: number | undefined): void {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
-    const userId: string|null=localStorage.getItem('userId')
-    this.http.post<user>(`http://localhost:3000/api/courses/${c.id}/enroll`,{userId},{headers})
-    .subscribe(
-      (response) => {
-        console.log('the  user join successfully', response);
-        
-      },
-      (error) => {
-        console.error('Error ', error); // טיפול בשגיאות
-        alert('הנך רשום כבר לקורס זה')
-      }
-    );
+
+    this.http.delete(`http://localhost:3000/api/courses/${id}`, { headers })
+      .subscribe(
+        (response) => {
+          console.log('Course deleted successfully', response);
+          this.courses = this.courses.filter(course => course.id !== id); // עדכון רשימת הקורסים
+        },
+        (error) => {
+          console.error('Error deleting course', error); // טיפול בשגיאות
+        }
+      );
   }
-  deletePerson(c:course){
+
+  // פונקציה לעריכת קורס
+  editCourse(course: any): void {
+    this.router.navigate(['/newCourses'], { state: { courseData: course } });
+  }
+
+  // פונקציה להצגת שיעורים של קורס
+  showLesson(course: any): void {
+    this.router.navigate(['/getLessons'], { state: { courseData: course } });
+  }
+
+  // פונקציה להוספת משתמש לקורס
+  AddPerson(c: course): void {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
-    const userId: string|null=localStorage.getItem('userId')
+
+    const userId: string | null = localStorage.getItem('userId');
+    if (!userId) return;
+
+    this.http.post<user>(`http://localhost:3000/api/courses/${c.id}/enroll`, { userId }, { headers })
+      .subscribe(
+        (response) => {
+          console.log('User enrolled successfully', response);
+        },
+        (error) => {
+          console.error('Error enrolling user', error); // טיפול בשגיאות
+          alert('הנך רשום כבר לקורס זה');
+        }
+      );
+  }
+
+  // פונקציה להסרת משתמש מקורס
+  deletePerson(c: course): void {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    const userId: string | null = localStorage.getItem('userId');
+    if (!userId) return;
+
     this.http.delete<user>(`http://localhost:3000/api/courses/${c.id}/unenroll`, {
       headers,
       body: { userId } // הוספת userId לגוף הבקשה
-  })
-    .subscribe(
-      (response) => {
-        console.log('the  user delete successfully', response);
-        
-      },
-      (error) => {
-        console.error('Error ', error); // טיפול בשגיאות
-        alert('הנך לא רשום לקורס זה')
-      }
-    );
+    })
+      .subscribe(
+        (response) => {
+          console.log('User unenrolled successfully', response);
+        },
+        (error) => {
+          console.error('Error unenrolling user', error); // טיפול בשגיאות
+          alert('הנך לא רשום לקורס זה');
+        }
+      );
   }
 }

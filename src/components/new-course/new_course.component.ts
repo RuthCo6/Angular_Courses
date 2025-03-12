@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,15 +20,23 @@ import { Router } from '@angular/router';
     ReactiveFormsModule
   ],
   templateUrl: './new_course.component.html',
-  styleUrl: './new_course.component.css'
+  styleUrls: ['./new_course.component.css']
 })
-export class NewCourseComponent {
+export class NewCourseComponent implements OnInit {
   postCourseForm: FormGroup;
-  token: string = sessionStorage.getItem("token") ?? "";
+  token: string = '';
   isEditMode = false;
-  constructor(private fb: FormBuilder, private courseService: GetCoursesService, private router: Router) {
+
+  constructor(
+    private fb: FormBuilder,
+    private courseService: GetCoursesService,
+    private router: Router
+  ) {
+    // אם יש נתונים מהניווט
     const navigation = this.router.getCurrentNavigation();
     const courseData = navigation?.extras.state?.['courseData'];
+    
+    // הגדרת הטופס לפי נתוני הקורס
     this.postCourseForm = this.fb.group({
       course: this.fb.group({
         title: [courseData ? courseData.title : '', Validators.required],
@@ -36,40 +44,57 @@ export class NewCourseComponent {
         id: [courseData ? courseData.id : null]
       })
     });
+    
     if (courseData) {
       this.isEditMode = true;
     }
+
+    // אתחול הטוקן מ-sessionStorage (בדיקה אם קיים)
+    this.token = sessionStorage.getItem('token') ?? ''; // אם אין טוקן, משתמשים בערך ברירת מחדל
+  }
+
+  ngOnInit(): void {
+    // כאן אפשר להוסיף לוגיקה נוספת בעת אתחול הקומפוננטה אם צריך
   }
 
   onSubmit(): void {
     const storedUserId = localStorage.getItem('userId');
-    const userId: string | null = localStorage.getItem('userId')
-
+    const userId: string | null = storedUserId ?? ''; // אם לא נמצא, משתמשים בערך ברירת מחדל
 
     console.log(userId);
     console.log(this.postCourseForm.value.course.id);
 
+    // עדכון או הוספת קורס
     if (this.isEditMode) {
       if (this.postCourseForm.valid) {
         console.log(this.postCourseForm.value);
-        this.courseService.putCoursr(this.postCourseForm.value.course.title, this.postCourseForm.value.course.description, userId, this.token, this.postCourseForm.value.course.id).subscribe({
+        this.courseService.putCoursr(
+          this.postCourseForm.value.course.title,
+          this.postCourseForm.value.course.description,
+          userId,
+          this.token,
+          this.postCourseForm.value.course.id
+        ).subscribe({
           next: (data) => {
-            console.log("הקורס עודכן בהצלחה")
+            console.log("הקורס עודכן בהצלחה");
             console.log(data);
-
-          }
-          , error: (err) => console.log("no")
+          },
+          error: (err) => console.log("no")
         });
-      };
-    }
-    else {
+      }
+    } else {
       if (this.postCourseForm.valid) {
         console.log(this.postCourseForm.value);
-        this.courseService.postCoursr(this.postCourseForm.value.course.title, this.postCourseForm.value.course.description, userId, this.token).subscribe({
-          next: (data) => console.log("הקורס נוסף בהצלחה"), error: (err) => console.log("no")
+        this.courseService.postCoursr(
+          this.postCourseForm.value.course.title,
+          this.postCourseForm.value.course.description,
+          userId,
+          this.token
+        ).subscribe({
+          next: (data) => console.log("הקורס נוסף בהצלחה"),
+          error: (err) => console.log("no")
         });
-      };
+      }
     }
-
   }
 }

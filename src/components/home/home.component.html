@@ -1,15 +1,16 @@
-<!-- <link rel="stylesheet" href="home.component.css"> -->
+<div class="page-container">
 
-<div class="button-container">
+  <div class="button-container">
 
-  <button mat-raised-button class="bt" color="primary" [routerLink]="['/login']">
-    כניסה
-  </button>
-  <button mat-raised-button class="bt" color="primary" [routerLink]="['/register']">הרשמה</button>
-  <button mat-raised-button class="bt" color="primary" [routerLink]="['/getCourses']">
-    להצגת קורסים
-  </button>
-  <button mat-raised-button class="bt" color="primary" [routerLink]="['/newCourses']">להוספת קורס</button>
+    <button mat-raised-button class="bt" color="primary" [routerLink]="['/login']">
+      כניסה
+    </button>
+    <button mat-raised-button class="bt" color="primary" [routerLink]="['/register']">הרשמה</button>
+    <button mat-raised-button class="bt" color="primary" [routerLink]="['/getCourses']">
+      להצגת קורסים
+    </button>
+    <button mat-raised-button class="bt" color="primary" [routerLink]="['/newCourses']">להוספת קורס</button>
 
+  </div>
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>
