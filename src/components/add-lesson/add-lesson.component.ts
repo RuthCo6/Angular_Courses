@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GetCoursesService } from '../../services/getCourses/get-courses.service';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +26,7 @@ import { lesson } from '../../models/lesson';
 })
 export class AddLessonComponent implements OnInit {
   courseData: any;
-  postLessonForm: FormGroup;
+  postLessonForm!: FormGroup;
   token: string = "";
   isEditMode = false;
   lessonData: any;
@@ -36,24 +36,24 @@ export class AddLessonComponent implements OnInit {
     private courseService: GetCoursesService,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService // הוספתי את השירות לשימוש בטוקן
+    private authService: AuthService, // הוספתי את השירות לניהול הטוקן
+    private route: ActivatedRoute // הוספתי את ActivatedRoute
   ) {
-    const navigation = this.router.getCurrentNavigation();
-    this.courseData = navigation?.extras.state?.['courseData'];
-    this.lessonData = navigation?.extras.state?.['lesson'];
+    this.route.paramMap.subscribe(params => {
+      this.courseData = history.state.courseData;
+      this.lessonData = history.state.lesson;
+      if (this.lessonData) {
+        this.isEditMode = true;
+      }
+      console.log("📥 נתונים שהתקבלו מהניווט:", this.courseData);
 
-    if (this.lessonData) {
-      this.isEditMode = true;
-    }
-
-    console.log("📥 נתונים שהתקבלו מהניווט:", this.courseData);
-
-    // יצירת הטופס עבור השיעור
-    this.postLessonForm = this.fb.group({
-      lesson: this.fb.group({
-        title: [this.lessonData ? this.lessonData.title : '', Validators.required],
-        content: [this.lessonData ? this.lessonData.content : '', Validators.required]
-      })
+      // יצירת הטופס עבור השיעור
+      this.postLessonForm = this.fb.group({
+        lesson: this.fb.group({
+          title: [this.lessonData ? this.lessonData.title : '', Validators.required],
+          content: [this.lessonData ? this.lessonData.content : '', Validators.required]
+        })
+      });
     });
   }
 
@@ -74,9 +74,11 @@ export class AddLessonComponent implements OnInit {
       ).subscribe({
         next: (data) => {
           console.log("השיעור עודכן בהצלחה", data);
+          this.router.navigate(['/getLessons'], { state: { courseData: this.courseData } });
         },
         error: (err) => {
           console.log("שגיאה בעדכון השיעור", err);
+          alert('שגיאה בעדכון השיעור, נסה שוב מאוחר יותר.');
         }
       });
     } else {
@@ -91,9 +93,11 @@ export class AddLessonComponent implements OnInit {
         ).subscribe({
           next: (data) => {
             console.log("הקורס נוסף בהצלחה", data);
+            this.router.navigate(['/getLessons'], { state: { courseData: this.courseData } });
           },
           error: (err) => {
             console.log("שגיאה בהוספת שיעור", err);
+            alert('שגיאה בהוספת שיעור, נסה שוב מאוחר יותר.');
           }
         });
       }

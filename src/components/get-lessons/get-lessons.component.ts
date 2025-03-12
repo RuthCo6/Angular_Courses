@@ -20,12 +20,12 @@ import { course } from '../../models/course';
     MatDividerModule
   ],
   templateUrl: './get-lessons.component.html',
-  styleUrl: './get-lessons.component.css'
+  styleUrls: ['./get-lessons.component.css']
 })
 export class GetLessonsComponent implements OnInit {
   lessons: lesson[] = []; // מערך השיעורים
   token: string = ''; // משתנה לאחסון הטוקן
-  role: string | any = localStorage.getItem('role');
+  role: string | any = ''; // משתנה לאחסון התפקיד
   courseData: any;
 
   constructor(
@@ -39,7 +39,12 @@ export class GetLessonsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.token = sessionStorage.getItem('token') ?? ''; // קבלת הטוקן מה-sessionStorage
+    // בדיקה אם אנחנו בדפדפן
+    if (typeof window !== 'undefined') {
+      this.token = sessionStorage.getItem('token') ?? ''; // קבלת הטוקן מה-sessionStorage
+      this.role = localStorage.getItem('role') ?? ''; // קבלת התפקיד מ-localStorage
+    }
+
     if (this.token) {
       this.loadLessons();
     } else {

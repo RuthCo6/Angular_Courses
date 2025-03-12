@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
     MatIconModule
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   registerForm: FormGroup;
@@ -42,20 +42,25 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.registerForm.valid) {
       const { email, password } = this.registerForm.value.user;
-      
-      // קריאה לשירות ההתחברות
-      this.AuthService.login(email, password).subscribe({
-        next: (data) => {
-          console.log("נכנסת בהצלחה");
-          localStorage.setItem('role', data.role);
-          sessionStorage.setItem('token', data.token); // שמירת הטוקן
-          this.router.navigate(['/dashboard']); // ניווט לעמוד הבא לאחר התחברות מוצלחת
-        },
-        error: (err) => {
-          console.error("שגיאה בהתחברות", err);
-          this.loginError = 'לא הצלחנו להתחבר. אנא בדוק את פרטי הכניסה שלך.';
-        }
-      });
+
+      // בדיקה אם אנחנו בדפדפן
+      if (typeof window !== 'undefined') {
+        // קריאה לשירות ההתחברות
+        this.AuthService.login(email, password).subscribe({
+          next: (data) => {
+            console.log("נכנסת בהצלחה");
+            localStorage.setItem('role', data.role);
+            sessionStorage.setItem('token', data.token); // שמירת הטוקן
+            this.router.navigate(['/dashboard']); // ניווט לעמוד הבא לאחר התחברות מוצלחת
+          },
+          error: (err) => {
+            console.error("שגיאה בהתחברות", err);
+            this.loginError = 'לא הצלחנו להתחבר. אנא בדוק את פרטי הכניסה שלך.';
+          }
+        });
+      } else {
+        console.error('localStorage or sessionStorage not available');
+      }
     } else {
       console.log("הטופס לא תקין");
     }

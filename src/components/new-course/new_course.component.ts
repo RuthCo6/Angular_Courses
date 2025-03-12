@@ -50,7 +50,9 @@ export class NewCourseComponent implements OnInit {
     }
 
     // אתחול הטוקן מ-sessionStorage (בדיקה אם קיים)
-    this.token = sessionStorage.getItem('token') ?? ''; // אם אין טוקן, משתמשים בערך ברירת מחדל
+    if (typeof window !== 'undefined') {
+      this.token = sessionStorage.getItem('token') ?? ''; // אם אין טוקן, משתמשים בערך ברירת מחדל
+    }
   }
 
   ngOnInit(): void {
@@ -58,8 +60,12 @@ export class NewCourseComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const storedUserId = localStorage.getItem('userId');
-    const userId: string | null = storedUserId ?? ''; // אם לא נמצא, משתמשים בערך ברירת מחדל
+    let userId: string | null = '';
+    
+    if (typeof window !== 'undefined') {
+      const storedUserId = localStorage.getItem('userId');
+      userId = storedUserId ?? ''; // אם לא נמצא, משתמשים בערך ברירת מחדל
+    }
 
     console.log(userId);
     console.log(this.postCourseForm.value.course.id);

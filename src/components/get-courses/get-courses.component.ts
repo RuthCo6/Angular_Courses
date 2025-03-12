@@ -27,7 +27,7 @@ import { AuthService } from '../../services/auth.service'; // הוספתי את 
 export class GetCoursesComponent implements OnInit {
   courses: course[] = []; // מערך הקורסים
   token: string = ''; // הוספתי את משתנה הטוקן
-  role: string | any = localStorage.getItem('role');
+  role: string | any = '';
 
   constructor(
     private courseService: GetCoursesService,
@@ -37,12 +37,20 @@ export class GetCoursesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.token = this.authService.getToken() ?? ''; // קבלת הטוקן באמצעות השירות
-    this.fetchCourses(); // קריאה לפונקציה להורדת קורסים
+    // בדיקה אם אנחנו בדפדפן
+    if (typeof window !== 'undefined') {
+      this.role = localStorage.getItem('role'); // קבלת התפקיד מה-localStorage
+      this.token = this.authService.getToken() ?? ''; // קבלת הטוקן באמצעות השירות
+      this.fetchCourses(); // קריאה לפונקציה להורדת קורסים
+    } else {
+      console.error('localStorage or sessionStorage not available');
+    }
   }
 
   // פונקציה להורדת קורסים
   fetchCourses(): void {
+    if (!this.token) return; // אם אין טוקן, לא נבצע את הקריאה
+
     this.courseService.getAllCourses(this.token).subscribe(
       (data) => {
         this.courses = data; // שמירת הקורסים במערך
@@ -55,6 +63,8 @@ export class GetCoursesComponent implements OnInit {
 
   // פונקציה למחיקת קורס
   delete(id: number | undefined): void {
+    if (!id || !this.token) return; // אם אין id או טוקן, לא נבצע את המחיקה
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
@@ -83,6 +93,8 @@ export class GetCoursesComponent implements OnInit {
 
   // פונקציה להוספת משתמש לקורס
   AddPerson(c: course): void {
+    if (!this.token) return; // אם אין טוקן, לא נבצע את ההוספה
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
@@ -104,6 +116,8 @@ export class GetCoursesComponent implements OnInit {
 
   // פונקציה להסרת משתמש מקורס
   deletePerson(c: course): void {
+    if (!this.token) return; // אם אין טוקן, לא נבצע את ההסרה
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
