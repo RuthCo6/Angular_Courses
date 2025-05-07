@@ -7,9 +7,9 @@ import { HomeComponent } from '../components/home/home.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HomeComponent,RouterModule],
+  imports: [RouterOutlet, RouterModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'] 
 })
 export class AppComponent {
   title = 'Courses-Project';
