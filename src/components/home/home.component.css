@@ -1,12 +1,28 @@
-<<<<<<< HEAD
-body {
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* מונע גלילה */
   background-color: black;
-  color: white; 
-  margin: 0; /* מסיר שוליים */
+  color: white;
+  font-family: sans-serif;
+}
+
+:host {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
 }
 
 .button-container {
@@ -15,7 +31,6 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 15px;
-  margin-top: 60px; 
 }
 
 .bt {
@@ -24,82 +39,8 @@ body {
   border-radius: 8px;
 }
 
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-}
-
-.page-container {
-  display: flex;
-  flex-direction: column; /* מסדר את הכל בטור */
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 router-outlet {
   display: block;
-  margin-top: 40px; 
-  text-align: center;
+  margin-top: 20px;
+  max-height: 100%;
 }
-
-
-
-
-
-=======
-body {
-  background-color: black;
-  color: white; 
-  margin: 0; /* מסיר שוליים */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 60px; 
-}
-
-.bt {
-  font-size: 18px;
-  padding: 12px 24px;
-  border-radius: 8px;
-}
-
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-}
-
-.page-container {
-  display: flex;
-  flex-direction: column; /* מסדר את הכל בטור */
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-router-outlet {
-  display: block;
-  margin-top: 40px; 
-  text-align: center;
-}
-
-
-
-
-
->>>>>>> dc1607a (Add existing project files)
